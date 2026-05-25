@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOC Analyst CTF Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Outfit,sans-serif;background:linear-gradient(160deg,#0d1117 0%,#1a1f35 100%);color:#e6edf3;min-height:100vh;padding:2rem}
+h1{font-size:2rem;margin-bottom:.5rem}
+.sub{color:#8b949e;margin-bottom:1.5rem;max-width:720px;line-height:1.5}
+.howto{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;max-width:800px}
+.howto h2{font-size:1rem;color:#58a6ff;margin-bottom:.5rem}
+.howto ul{margin:.5rem 0 0 1.2rem;color:#8b949e;font-size:.9rem}
+.progress-wrap{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:1.25rem;margin-bottom:1.5rem;max-width:800px}
+.progress-bar{height:12px;background:#21262d;border-radius:6px;overflow:hidden;margin:.75rem 0}
+#progFill{height:100%;width:0;background:linear-gradient(90deg,#3fb950,#58a6ff);transition:width .4s}
+#cert{display:none;margin-top:1rem;padding:1rem;background:#14532d33;border:1px solid #3fb950;border-radius:10px}
+#cert.show{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.card{background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.25rem;transition:transform .2s,border-color .2s;text-decoration:none;color:inherit;display:block;position:relative}
+.card:hover{transform:translateY(-4px);border-color:#58a6ff}
+.card.done{border-color:#3fb950}
+.card h2{font-size:1.1rem;color:#58a6ff;margin-bottom:.5rem}
+.card p{font-size:.85rem;color:#8b949e}
+.badge{display:inline-block;background:#21262d;padding:.2rem .5rem;border-radius:6px;font-size:.75rem;margin-top:.5rem}
+.done-badge{position:absolute;top:.75rem;right:.75rem;color:#3fb950;font-size:1rem}
+</style>
+</head>
+<body>
+<h1><i class="fa fa-shield-halved"></i> SOC Analyst CTF Lab</h1>
+<p class="sub">Ten hands-on SOC scenarios. Each challenge has 5 tasks (20 points each). Reach 100 points to unlock that scenario's flag. Progress is saved in your browser.</p>
+
+<div class="howto">
+<h2>How it works</h2>
+<ul>
+<li>Open a challenge, read the <strong>scenario briefing</strong>, investigate the simulated logs/UI.</li>
+<li>Answer each task and click <strong>Check</strong>. Wrong answers do not reveal the solution.</li>
+<li>Change an answer and check again: a previously correct task can lose 20 points if now wrong.</li>
+<li><strong>Hint (-5)</strong> on a task costs 5 points from your score (you need at least 5 points first).</li>
+<li><strong>Reset challenge</strong> clears that page only and removes its saved progress.</li>
+<li>Finish <strong>all 5 tasks</strong> to unlock the flag and earn a checkmark on the hub (score can be 95/100 if you used hints).</li>
+<li>Complete all 10 scenarios for the <strong>SOC Analyst Lab Complete</strong> certificate below.</li>
+</ul>
+</div>
+
+<div class="progress-wrap">
+<h2>Your progress</h2>
+<p id="progText">0 / 10 scenarios completed</p>
+<div class="progress-bar"><div id="progFill"></div></div>
+<div id="cert">
+<strong><i class="fa fa-trophy"></i> SOC Analyst Lab Complete</strong>
+<p style="margin-top:.5rem;font-size:.9rem;color:#8b949e">All ten flags captured. Submit this page screenshot or list of flags to your team lead.</p>
+<p id="flagList" style="margin-top:.75rem;font-family:monospace;font-size:.8rem;color:#3fb950"></p>
+</div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const CHALLENGES=[
+{id:'q01',file:'q01-impossible-travel.html',title:'Q1 Impossible Travel',desc:'VPN Mumbai then Salesforce NYC in 5 minutes.',badge:'Globe + logs'},
+{id:'q02',file:'q02-suspicious-powershell.html',title:'Q2 Suspicious PowerShell',desc:'Outlook spawns encoded download cradle.',badge:'Terminal'},
+{id:'q03',file:'q03-lsass-access.html',title:'Q3 LSASS Access',desc:'Procdump on domain controller DC-01.',badge:'3D alert'},
+{id:'q04',file:'q04-beaconing.html',title:'Q4 Beaconing',desc:'60s / 512-byte C2 pattern.',badge:'Network graph'},
+{id:'q05',file:'q05-webshell.html',title:'Q5 Web Shell',desc:'Apache shell.php from dev workstation.',badge:'Forensics tab'},
+{id:'q06',file:'q06-mfa-fatigue.html',title:'Q6 MFA Fatigue',desc:'20+ push notifications, one approve.',badge:'Push UI'},
+{id:'q07',file:'q07-dns-anomaly.html',title:'Q7 DNS Anomaly',desc:'High-entropy subdomains / tunneling.',badge:'DNS packets'},
+{id:'q08',file:'q08-registry-persistence.html',title:'Q8 Registry Run Key',desc:'Fake WindowsUpdate in Public folder.',badge:'Registry view'},
+{id:'q09',file:'q09-email-exfil.html',title:'Q9 Email Exfil',desc:'ZIP + password in separate email.',badge:'Recall sim'},
+{id:'q10',file:'q10-smb-outbound.html',title:'Q10 Outbound SMB',desc:'Port 445 to internet.',badge:'Firewall'}
+];
+const FLAGS={
+q01:'FLAG{IMPOSSIBLE_TRAVEL_TRUE}',q02:'FLAG{POWERSHELL_DOWNLOAD_CRADLE}',q03:'FLAG{LSASS_COMPROMISE_DETECTED}',
+q04:'FLAG{BEACON_C2_DETECTED}',q05:'FLAG{WEBSHELL_ON_WEB01}',q06:'FLAG{MFA_FATIGUE_STOPPED}',
+q07:'FLAG{DNS_TUNNEL_DETECTED}',q08:'FLAG{PERSISTENCE_RUN_KEY}',q09:'FLAG{DATA_EXFIL_EMAIL}',q10:'FLAG{SMB_OUTBOUND_MALWARE}'
+};
+const grid=document.getElementById('grid');
+CHALLENGES.forEach(c=>{
+const a=document.createElement('a');
+a.className='card';a.href='challenges/'+c.file;a.dataset.id=c.id;
+a.innerHTML='<h2>'+c.title+'</h2><p>'+c.desc+'</p><span class="badge">'+c.badge+'</span><span class="done-badge" style="display:none" title="Completed"><i class="fa fa-check-circle"></i> <span class="done-score"></span></span>';
+grid.appendChild(a);
+});
+function refresh(){
+const p=JSON.parse(localStorage.getItem('ctf_all_progress')||'{}');
+let n=0;const lines=[];
+document.querySelectorAll('.card').forEach(card=>{
+const id=card.dataset.id;
+const done=p[id]&&p[id].done;
+card.classList.toggle('done',!!done);
+card.querySelector('.done-badge').style.display=done?'block':'none';
+if(done){n++;lines.push(FLAGS[id]+' ('+(p[id].score!=null?p[id].score:100)+'/100)');var ds=card.querySelector('.done-score');if(ds)ds.textContent=(p[id].score!=null?p[id].score:100)+'/100';}
+});
+document.getElementById('progText').textContent=n+' / 10 scenarios completed';
+document.getElementById('progFill').style.width=(n*10)+'%';
+const cert=document.getElementById('cert');
+cert.classList.toggle('show',n>=10);
+document.getElementById('flagList').textContent=lines.join('\n');
+}
+refresh();
+window.addEventListener('focus',refresh);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
+</script>
+</body>
+</html>
