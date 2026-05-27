@@ -127,17 +127,6 @@ This lab is designed for:
 
 ---
 
-## Quick Start (Students)
-
-1. **Download** this repository
-2. **Find** `index.html`
-3. **Double-click** to open in browser
-4. **Click any challenge card** to start!
-
-That's it - no installation, no setup, no dependencies!
-
----
-
 ## Ready to Start?
 
 **Open `index.html` in your browser** and click any challenge to begin!
