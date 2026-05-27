@@ -112,15 +112,6 @@ This lab is designed for:
 - **Interview preparation** - practice SOC-style scenario questions
 - **Skill assessment** - evaluate incident response decision-making
 
-## Important Notes
-
-⚠️ **No external resources needed** - All information is in the scenario  
-⚠️ **No programming required** - This is a conceptual/decision-making lab  
-⚠️ **Browser-based** - Works on any modern browser (Chrome, Firefox, Edge, Safari)  
-⚠️ **No server required** - Everything runs locally in your browser  
-⚠️ **UTF-8 encoded** - All HTML files are UTF-8 (no BOM) for proper rendering  
-⚠️ **Independent challenges** - Each of the 10 labs works separately, complete in any order  
-
 ### Troubleshooting
 
 **If you see raw HTML source instead of the UI:**
@@ -130,20 +121,9 @@ This lab is designed for:
 4. Hard refresh with **Ctrl+F5**
 5. Reopen `index.html`
 
-**In Cursor editor:**
-- If bottom-right says **UTF-16 LE** → Click it → **Save with Encoding** → **UTF-8**
-
 **If a challenge seems stuck:**
 - Reset the challenge using the **Reset challenge** button
 - Or use private/incognito window
-
-## Technical Fixes Applied
-
-✅ **UTF-8 encoding** - All 17 files converted (no more raw HTML source)  
-✅ **Q8 Task 5** - Now uses checkboxes (not chips), correct hint matching  
-✅ **Dropdown pattern** - Correct answers in different positions per task (no predictable pattern)  
-✅ **Added encoding fix scripts** - `fix_utf8.py` and `fix-encoding.ps1`  
-✅ **Added .editorconfig** - Editors default to UTF-8  
 
 ---
 
